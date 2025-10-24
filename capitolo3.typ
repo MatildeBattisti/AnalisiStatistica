@@ -59,55 +59,125 @@ $ p_x (x; mu, sigma) = 1/(sqrt(2 pi) sigma) exp[-(x-mu)^2 / (2 sigma^2)] quad ar
 Cioè adesso la _Likelihood_ è una funzione di due parametri e non è più una \"gaussiana\".
 
 == Proprietà della _Likelihood_
-Alcune proprieta' della Likelihood
-1. L puo' essere continua o discreta, multi-D, a seconda di che cosa e'
-μ, indipendentemente dalle caratteristiche della osservabile. Dalla
-osservabile eredita solo le unita' di misura.
-2. La Likelihood non si "integra". Non e' detto che sia integrabile - e
-comunque il suo integrale non e' interpretabile.
+1. $L$ può essere continua o discreta, multi-dimensionale, a seconda di che cosa è $mu$, indipendentemente dalle caratteristiche dell'osservabile: dall'osservabile eredita solo le unità di misura.
 
-3. trasformazioni:
-$ "LR" = (L_(x_0) (mu_1))/ (L_(x_0) (mu_2)) $
-Quando facciamo il camnio di variabili
-$ "LR" = (L_(x_0) (mu_1))||J||/ L_(x_0) (mu_2)||J|| $
-I Jacobuani si cancellano
+2. Non è deto che la _likelihood_ sia integrabile, e comunque il suo integrale non è interpretabile.
 
-4. $L_x(f(mu)) = L_x (mu) $
-Vogliamo vederlo in un caso particolare:
-$ L_t (lambda) = lambda e^(- lambda t) ...$
-La forma funzionale è invariata così come la posizione di massimi e minimi della funzione.
+3. Nel caso di trasformazioni dell'osservabile, la _pdf_ (e dunque $L$), viene moltiplicata solo per lo _Jacobiano_ $norm(J)$. Quest'ultimo è una funzione dei soli dati, quindi la forma funzionale di $L$ scala per una semplice costante, lasciando il rapporto di likelihood invariato:
+$ "LR" = (L_(x_0) (mu_1) norm(J))/(L_(x_0) (mu_2) norm(J)) = (L_(x_0) (mu_1))/(L_(x_0) (mu_2)) $
 
-6. $ L(x_0, x_1, dots)= product_i L_(x_i) (mu) $
-Supponiamo di avere una distribuzione uniforme $U(0, m)$ e di aver osservato $x_i$; allora per eventi indipendenti
-$ L_(arrow(x_i)) (m) = 1/m^N $
-dove $m>max{x_i}$.
+    Si può per questo motivo considerare *$L$ definita a meno di una costante moltiplicativa*.
 
-Nel caso precedente
+4. Se si fa una *trasformazione invertibile nello spazio dei parametri*, la _pdf_ resta invariata, e la *$L$ resta invariata in _valore_, ma cambia
+_forma funzionale_*:
+$ L_x(f(mu)) = L_x (mu) $
+
+    *ESEMPIO*: distribuzione esponenziale
+    $ L_t (lambda) = lambda e^(- lambda t) = lambda (tau) e^(- lambda(tau) t) = (e^(-t/tau))/tau eq.triple L_t (tau) $
+    La forma funzionale rimane invariata così come la posizione di massimi e minimi della funzione.
+
+5. La _likelihood_ ottenuta da misure di più osservabili indipendenti, dipendenti però da un certo set di parametri, è data dal *prodotto delle Likelihood individuali*:
+$ L(x_0, x_1, dots; mu) = product_i L_(x_i) (mu) $
+*ESEMPIO*: supponiamo di avere una distribuzione uniforme $U(0, m)$ e di aver osservato $x_i$; allora per eventi indipendenti
+$ L_(arrow(x_i)) (m) = 1/m^N quad "per" quad m>max{x_i} $
+*ESEMPIO*: ancora distribuzione esponenziale
 $ L_(t_0, t_1) (lambda) = (lambda e^(-lambda t_0))(lambda e^(-lambda t_1)) = L_(t_0) (lambda) L_(t_1) (lambda) $
 
-8. log(L) da cui la combianzione diventa la somma delle likelihood e si possono definire i log a meno di costnti additive (prima a meno di fattori moltiplicativi).
+6. Dalle precedenti proprietà è facile comprendere che sia particolarmente comodo lavorare con le likelihood in quanto facilmente combinabili. Spesso risulta comodo lavorare anche con il loro logaritmo $log(L)$; in tal caso la likelihood è definita a meno di una costante additiva.
 
-== Esempio di combinazione di likelihood
-Prendiamo due gaussiane
-$ p_x (x; mu, sigma) = $
-Abbiamo ottenuto due misure $x_1$ e $x_2$; scriviamo la likelihood combinata
-$ L_(x_1, x_2) = ...$
-Ne vediamo il logaritmo, a meno di un fattore costante:
-$ log L_x... = log(1/(2 pi sigma^2)) +...$
-dove il primo termine non ci interessa perchè è un fattore additivo
-Svolgiamo il calcolo come appunti con un pò di manipolazioni algebriche.
-L'oggetto ha la forma di una gaussiana centrata nel valor medio delle misure.
+== Esempio di combinazione di Likelihood gaussiane
+Supponiamo di avere due osservazioni $x_1$ e $x_2$, da una stessa distribuzione Gaussiana:
+$ p_x (x; mu, sigma) = 1/(sqrt(2 pi)sigma) exp[-(x-mu)^2/(2 sigma^2)] $
+Scriviamo la likelihood combinata:
+$ L_(x_1, x_2) (mu) = 1/(2 pi sigma^2) exp[-((x_1-mu)^2+(x_2-mu)^2)/(2 sigma^2)] $
+Ne calcoliamo il logaritmo:
+$ log L_(x_1, x_2) (mu) = log(1/(2 pi sigma^2))  -((x_1-mu)^2+(x_2-mu)^2)/(2 sigma^2)= $
+dove possiamo trascurare il primo termine in qaunto fattore additivo.
+$ = -1/(2 sigma^2) (x_1^2 + x_2^2 -2 mu x_1 - 2 mu x_2 -2 mu^2) $
+$ = -1/(2 sigma^2) [(x_1 + x_2 -2 mu)^2/2 + x_1^2/2 + x_2^2/2 - x_1 x_2] $
+$ = -1/(2 sigma^2) [(x_1 + x_2 -2 mu)^2/2 + (x_1 - x_2)^2/2] $
+$ = -1/(2 sigma^2)[2((x_1 + x_2)/2 - mu)^2] $
+$ = -1/sigma^2 ((x_1 + x_2)/2 - mu)^2 $
+$ = 1/(2 overline(sigma)^2) (overline(x)-mu)^2 quad, quad overline(sigma)= sigma/sqrt(2) $
+Si può confrontare con il logaritmo della likelihood si $x$:
+$ 1/(2 sigma^2) (x-mu)^2 $
+per cui si osserva che il logaritmo della likelihood complessiva ha ancora la forma di una gaussiana in $mu$, centrata su $overline(x)$, con larghezza ridotta di $sqrt(2)$.
+
+*NOTA*: non stiamo facendo la _propagazione degli errori_, stiamo usando un risultato esatto!
+
+*NOTA*: il risultato non è legato al fatto che $x_1 + x_2$ abbia una probabilità gaussiana: stiamo _combinando l'informazione di due misure_, non le stiamo sommando!
 
 == Likelihood e inferenza
-Likelihood -> loss per ML
+La likelihood, pur non essendo interpretabile come una probabilità, ha un significato intuitivo abbastanza chiaro:
+- se $L(mu)=0$ allora $mu$ può essere escluso come possibilità;
+- valori più alti di $L$ corrispondono a parametri più “plausibili”. Se $L$ ha un grafico “stretto” attorno a una serie di valori, questi sono “favoriti” dal risultato (ma comunque non è interpretabile come una probabilità);
+- la combinazione (prodotto) tende a produrre $L$ più "strette"
+
+    *ESEMPIO*: la distribuzione uniforme composta da $N$ misure tende ad una Gaussiana
+
+La likelihood presenta un modo promettente per esprimere un'*inferenza funzionale*:
+$ s(x) : x arrow f_x (mu) = L_x (mu); quad f: A arrow RR $
+cioè, per ogni possibile informazione $x$, si può associare una *funzione di inferenza $f_x$* che agisce su $mu$. In altre parole la likelihood
+$ L_x (mu) = P(x| mu) $
+è una funzione di $mu$ (il _parametro_) dati i _dati osservati_ $x$.
+Nel caso in cui $mu$ sia essa stessa un'osservabile, allora ammetterà una distribuzione di probabilità $P(mu)$, per cui possiamo pensare di fare qualche inferenza  quantitativa su di essa a partire dai dati osservati. Se $mu$ possiede una distribuzione di probabilità, si può inoltre parlare di probabilità congiunta $P(x, mu)$. Si può dire allora
+$ p(x; mu) = P(x|mu) $
+*NOTA*: si tratta di un abuso di notazione giustificato dal fatto che, sapendo che $P(x|mu) eq.not P(mu|x)$, allora capiamo che $L_x (mu) eq.not P(mu|x)$.
 
 == Uso inferenziale del teorema di Bayes
-Supponiamo di poter scrivere
-$ l_(x_0) (mu) = p(x_0 | mu) $
-Usando il teorema di Bayes
-$ p (mu| x_0) = p(mu) L_(x_0) / p(x_0) $
+Supponiamo dunque che si possa scrivere
+$ L_(x_0)(mu) = p(x_0|mu) $
+Usando il teorema di Bayes si ottiene:
+$ p(mu|x_0) = (p(mu) L_(x_0) (mu)) / p(x_0) $
+La *probabilità a posteriori* (*_posterior_*) *$p(mu|x_0)$* è il prodotto della funzione di Likelihood per la *probabilità a priori* (*_prior_*) *$p(mu)$*, con un fattore di normalizzazione.
+Vediamo alcune considerazioni:
+- la posterior, quando esiste, è uno strumento migliore di $L$ per l'inferenza funzionale:
+$ f_x (mu) = p(mu|x) $
 
-In generale L non è normalizzabile, ma l'integrale è definito.
+- malgrado $L$ non sia in generale normalizzabile, il prodotto $p(mu) dot L(mu)$ deve certamente esserlo; infatti l'integrale
+$ integral_M L_(x_0) (mu) p(mu) d mu $
+è ben definito.
 
-Esempio test covid
+- se posso calcolare la $p(mu)$, posso calcolare tutto ciò che desidero, ad esempio:
+    - la probabilità di un qualunque sottoinsieme di M;
+    - la $mu$ per cui la posterior è massima;
+    *NOTA*: nel caso di $M$ spazio discreto, questo si chiama 'Bayes Classifier' ed è il _classificatore di minimo rischio_ in teoria della decisione.
+
+La teoria Bayesiana ha grandi applicazioni nel campo di test medici (es. Test del Covid).
+
+== Altri utilizzi della formula Bayesiana
+Per evitare il problema di dover calcolare la normalizzazione $p(x_0)$, può essere conveniente considerare il rapporto tra due $mu$ differenti:
+$ (p(mu_1|x_0))/(p(mu_2|x_0)) = (L_(x_0) (mu_1))/(L_(x_0) (mu_2)) dot p(mu_1)/p(mu_2) $
+La quantità *$"LR"_(x_0) (mu_1, mu_2) eq.triple (L_(x_0)(mu_1))/(L_(x_0)(mu_2))$*, detta *fattore di Bayes*, 'aggiorna' il valore della probabilità relativa delle due ipotesi a seguito dell'osservazione. Questa formula può essere applicata ripetutamente con misure successive,
+diventando così una _regola di evoluzione_ del rapporto di probabilità.
+
+Questa si può applicare anche al caso di una procedura di selezione a partire da una
+popolazione. In tal caso, *$"LR"_(x_0) (mu_1, mu_2)$* viene chiamato anche *fattore di rejezione*, ed
+il rapporto *$p(mu_1)/p(mu_2)$* *abbondanza relativa*.
+
+*ESEMPIO* (PID): un fascio di particelle contiene una proporzione $1:100$ di muoni rispetto a pioni
+(purezza $1%$). Un rivelatore di muoni ha efficienza $90%$ per i muoni e $1%$ per i
+pioni; questo significa $"fattore di rejezione" = 90$. Gli eventi identificati dal rivelatore come muoni, hanno in realtà un'abbondanza relativa $= 0.01 dot 90 = 0.9 : 1$ rispetto ai pioni.
+
+È importante osservare che tutti i tipi di utilizzo della formula di Bayes visti fin qui
+sono esenti da controversie, e perfettamente in linea con il concetto di probabilità
+operativamente misurabile (frequentista). Parleremo ora di un altro tipo di utilizzo del teorema di Bayes, che è quello a cui spesso ci si riferisce parando di _inferenza Bayesiana_.
+
+== Inferenza Bayesiana _soggettivista_
+Cosa si può fare se $mu$ non ha una _pdf_ o se non è nota?
+
+L'approccio *Bayesiano soggettivo* (a volte detto ambiguamente 'Bayesiano') consiste nell'assegnare una distribuzione di probabilità a priori al parametro ignoto $mu$, basata sul *degree of belief* soggettivo *$pi(mu)$*. Trattando il d.o.b. come una probabilità (ed è stato dimostrato che ne rispetta gli assiomi), si può applicare il teorema di Bayes e ottenere un _posterior d.o.b._:
+$ pi_(x_0) (mu) = (pi(mu) L_(x_0)(mu))/ pi(x_0) = (pi(mu) L_(x_0)(mu))/(sum_i p(x; mu_i) pi(mu_i)) $
+Il campo di applicazione di questa formula è molto esteso, così come la sua potenza inferenziale; è doveroso però affrontare le sue difficoltà:
+
+- può essere difficile decidere la _prior_ giusta;
+- se $mu$ ha dominio illimitato, a volte si è condotti a scegliere una *$pi(mu)$ non normalizzabile* (_improper prior_). Questo costringe a sperare in L per la normalizzazione.
+
+Nella formula con il rapporto tra $mu$ diversi si ha:
+$ (pi(mu_1|x_0))/(pi(mu_2|x_0)) = (L_(x_0) (mu_1))/(L_(x_0) (mu_2)) dot pi(mu_1)/pi(mu_2) $
+Il fattore di Bayes $"LR"_(x_0)(mu_1,mu_2)$ viene chiamato anche _belief-updating ratio_, e
+i $pi(mu_1)/pi(mu_2)$ sono _betting odds_, nel linguaggio delle scommesse.
+
+In seguito vedremo che questo non è l'unico modo per trarre inferenze statistiche quando $mu$ non ha una distribuzione definita, ma le altre strade possono essere più complesse. Un concetto connesso al teorema di Bayes è il cosiddetto *Principio di Likelihood*.
+
 
